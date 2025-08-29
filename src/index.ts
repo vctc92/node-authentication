@@ -1,21 +1,16 @@
 import express from "express";
-import dotenv from "dotenv";
-
-dotenv.config();
-
+import { config } from "./config";
 const app = express();
-
-const PORT = process.env.PORT || 3001;
 
 app.get("/health", (req, res) => {
   res.json({ status: "OK", timeStamp: new Date().toISOString() });
 });
 
-const server = app.listen(PORT);
+const server = app.listen(config.app.port);
 
 server.on("error", (err: NodeJS.ErrnoException) => {
   if (err.code === "EADDRINUSE") {
-    console.error(`❌ Port ${PORT} is already in use`);
+    console.error(`❌ Port ${config.app.port} is already in use`);
     process.exit(1);
   } else {
     console.error(`❌ Server error - ${err}`);
@@ -24,6 +19,6 @@ server.on("error", (err: NodeJS.ErrnoException) => {
 });
 
 server.on("listening", () => {
-  console.log(`🚀 Authentication service running on port ${PORT}`);
-  console.log(`💊 Health check: http://localhost:${PORT}/health`);
+  console.log(`🚀 Authentication service running on port ${config.app.port}`);
+  console.log(`💊 Health check: http://localhost:${config.app.port}/health`);
 });
